@@ -69,8 +69,8 @@ export const INITIAL_USERS: UserAccount[] = [
   { 
     id: 1, 
     name: 'আল-আমীন সানা', 
-    username: 'admin_matribhumi',
-    password: 'Matribhumi@2026',
+    username: 'matrivumi_admin',
+    password: 'Admin@Matrivumi#2026',
     email: 'matrivumitvar@gmail.com', 
     phone: '01913449997',
     role: 'Admin', 
@@ -1823,13 +1823,8 @@ export function authenticateUser(loginId: string, passwordInput: string): { succ
       return { success: false, error: 'এই অ্যাকাউন্টটি বর্তমানে স্থগিত (Suspended) রয়েছে। প্রশাসকের সাথে যোগাযোগ করুন।' };
     }
     const expectedPassword = matchedUser.password || 'reporter123';
-    // Match exact user password or master admin bypass
-    if (
-      cleanPass === expectedPassword || 
-      cleanPass === 'Matribhumi@2026' || 
-      cleanPass === 'Admin@Matribhumi2026' || 
-      cleanPass === 'tv_admin_2026'
-    ) {
+    // Match exact user password ONLY. No bypasses!
+    if (cleanPass === expectedPassword) {
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('matribhumi_admin_logged', 'true');
         sessionStorage.setItem('matribhumi_admin_role', matchedUser.role.toLowerCase());
@@ -1845,59 +1840,6 @@ export function authenticateUser(loginId: string, passwordInput: string): { succ
     } else {
       return { success: false, error: 'পাসওয়ার্ডটি সঠিক নয়! অনুগ্রহ করে সঠিক পাসওয়ার্ড দিন।' };
     }
-  }
-
-  // 2. Master Admin and Editor direct fallback validation
-  const isAdminId = cleanId === 'admin_matribhumi' || cleanId === 'matribhumi_admin' || cleanId === 'admin' || cleanId.toLowerCase() === 'matrivumitvar@gmail.com';
-  const isAdminPass = cleanPass === 'Matribhumi@2026' || cleanPass === 'Admin@Matribhumi2026' || cleanPass === 'tv_admin_2026' || cleanPass === 'admin123';
-
-  if (isAdminId && isAdminPass) {
-    const adminUser = memoryUsers.find(u => u.role === 'Admin') || {
-      id: 1,
-      name: 'আল-আমীন সানা',
-      username: 'admin_matribhumi',
-      email: 'matrivumitvar@gmail.com',
-      role: 'Admin',
-      status: 'active',
-      designation: 'প্রধান প্রশাসক ও প্রকাশক',
-      created_at: new Date().toISOString(),
-    };
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('matribhumi_admin_logged', 'true');
-      sessionStorage.setItem('matribhumi_admin_role', 'admin');
-      sessionStorage.setItem('matribhumi_admin_name', adminUser.name);
-      sessionStorage.setItem('matribhumi_admin_id', String(adminUser.id));
-      sessionStorage.setItem('matribhumi_admin_user', JSON.stringify(adminUser));
-      
-      localStorage.removeItem('matribhumi_admin_logged');
-    }
-    return { success: true, user: adminUser as UserAccount };
-  }
-
-  const isEditorId = cleanId === 'editor_matribhumi' || cleanId === 'matribhumi_editor' || cleanId === 'editor' || cleanId.toLowerCase() === 'editor@matrivumi.tv';
-  const isEditorPass = cleanPass === 'Editor@2026' || cleanPass === 'tv_editor_2026' || cleanPass === 'editor123';
-
-  if (isEditorId && isEditorPass) {
-    const editorUser = memoryUsers.find(u => u.role === 'Editor') || {
-      id: 2,
-      name: 'মো: রায়ান',
-      username: 'editor_matribhumi',
-      email: 'editor@matrivumi.tv',
-      role: 'Editor',
-      status: 'active',
-      designation: 'বার্তা সম্পাদক',
-      created_at: new Date().toISOString(),
-    };
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('matribhumi_admin_logged', 'true');
-      sessionStorage.setItem('matribhumi_admin_role', 'editor');
-      sessionStorage.setItem('matribhumi_admin_name', editorUser.name);
-      sessionStorage.setItem('matribhumi_admin_id', String(editorUser.id));
-      sessionStorage.setItem('matribhumi_admin_user', JSON.stringify(editorUser));
-      
-      localStorage.removeItem('matribhumi_admin_logged');
-    }
-    return { success: true, user: editorUser as UserAccount };
   }
 
   return { success: false, error: 'ভুল ইউজার আইডি বা পাসওয়ার্ড! অনুগ্রহ করে সঠিক তথ্য প্রদান করুন।' };

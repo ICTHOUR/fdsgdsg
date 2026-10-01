@@ -29,6 +29,49 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (typeof window !== 'undefined') {
+                  // 1. Clear old persistent admin login keys to guarantee login prompt
+                  if (localStorage.getItem('matribhumi_admin_logged') === 'true') {
+                    localStorage.removeItem('matribhumi_admin_logged');
+                    localStorage.removeItem('matribhumi_admin_role');
+                    localStorage.removeItem('matribhumi_admin_name');
+                    console.log('Legacy persistent local storage login keys cleared.');
+                  }
+
+                  // 2. Unregister old Service Workers which serve the old cached website pages
+                  if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                      if (registrations.length > 0) {
+                        for (let registration of registrations) {
+                          registration.unregister().then(function() {
+                            console.log('Old cached Service Worker unregistered successfully.');
+                            // Hard-reload to load the fresh version from the server
+                            window.location.reload();
+                          });
+                        }
+                      }
+                    });
+                  }
+
+                  // 3. Clear old browser cache storage
+                  if ('caches' in window) {
+                    caches.keys().then(function(names) {
+                      for (let name of names) {
+                        caches.delete(name);
+                      }
+                    });
+                  }
+                }
+              } catch (e) {
+                console.error('Cache clean error:', e);
+              }
+            `
+          }}
+        />
       </head>
       <body suppressHydrationWarning className="bg-white text-slate-900 antialiased">{children}</body>
     </html>
