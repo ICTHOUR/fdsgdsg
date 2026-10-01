@@ -1,0 +1,2 @@
+# Google AdSense ads.txt for Matribhumi TV (matribhumitv.com)
+google.com, pub-811400024240001, DIRECT, f08c47fec0942fa0

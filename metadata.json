@@ -1,0 +1,8 @@
+{
+  "name": "Remix মাতৃভূমি টিভি - Matrivumi TV",
+  "description": "মাতৃভূমি টিভি (Matrivumi TV) - সত্যের সন্ধানে নির্ভীক সাংবাদিকতা | ২৪ ঘণ্টা লাইভ সংবাদ ও জাতীয় অনলাইন নিউজ পোর্টাল",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

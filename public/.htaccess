@@ -1,0 +1,23 @@
+# cPanel Apache/LiteSpeed Reverse Proxy Configuration for Next.js (Port 3000)
+# Matribhumi TV (matribhumitv.com)
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect HTTP to HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Pass all requests to Node.js application running on port 3000
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
+</IfModule>
+
+<IfModule mod_proxy.c>
+    ProxyPreserveHost On
+    ProxyPass /_next/webpack-hmr ws://127.0.0.1:3000/_next/webpack-hmr retry=0
+    ProxyPassReverse /_next/webpack-hmr ws://127.0.0.1:3000/_next/webpack-hmr
+    ProxyPass / http://127.0.0.1:3000/ retry=0
+    ProxyPassReverse / http://127.0.0.1:3000/
+</IfModule>
