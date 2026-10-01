@@ -29,12 +29,13 @@ function subscribeStorage(callback: () => void) {
 
 function getAdminNameClient() {
   if (typeof window === 'undefined') return 'প্রধান প্রশাসক';
-  return localStorage.getItem('matribhumi_admin_name') || 'প্রধান প্রশাসক';
+  return sessionStorage.getItem('matribhumi_admin_name') || localStorage.getItem('matribhumi_admin_name') || 'প্রধান প্রশাসক';
 }
 
 function getAdminRoleClient() {
   if (typeof window === 'undefined') return 'Admin';
-  return localStorage.getItem('matribhumi_admin_role') === 'editor' ? 'Editor' : 'Admin';
+  const role = sessionStorage.getItem('matribhumi_admin_role') || localStorage.getItem('matribhumi_admin_role');
+  return role === 'editor' ? 'Editor' : 'Admin';
 }
 
 export default function AdminDashboardPage() {
@@ -85,7 +86,7 @@ export default function AdminDashboardPage() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const logged = localStorage.getItem('matribhumi_admin_logged');
+      const logged = sessionStorage.getItem('matribhumi_admin_logged');
       if (logged === 'true') {
         setIsAuthenticated(true);
       } else {
@@ -309,6 +310,13 @@ export default function AdminDashboardPage() {
       localStorage.removeItem('matribhumi_admin_logged');
       localStorage.removeItem('matribhumi_admin_role');
       localStorage.removeItem('matribhumi_admin_name');
+      
+      sessionStorage.removeItem('matribhumi_admin_logged');
+      sessionStorage.removeItem('matribhumi_admin_role');
+      sessionStorage.removeItem('matribhumi_admin_name');
+      sessionStorage.removeItem('matribhumi_admin_id');
+      sessionStorage.removeItem('matribhumi_admin_email');
+      sessionStorage.removeItem('matribhumi_admin_user');
     }
     window.location.href = '/admin-login';
   };

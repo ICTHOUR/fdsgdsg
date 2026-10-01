@@ -1831,12 +1831,15 @@ export function authenticateUser(loginId: string, passwordInput: string): { succ
       cleanPass === 'tv_admin_2026'
     ) {
       if (typeof window !== 'undefined') {
-        localStorage.setItem('matribhumi_admin_logged', 'true');
-        localStorage.setItem('matribhumi_admin_role', matchedUser.role.toLowerCase());
-        localStorage.setItem('matribhumi_admin_name', matchedUser.name);
-        localStorage.setItem('matribhumi_admin_id', String(matchedUser.id));
-        localStorage.setItem('matribhumi_admin_email', matchedUser.email);
-        localStorage.setItem('matribhumi_admin_user', JSON.stringify(matchedUser));
+        sessionStorage.setItem('matribhumi_admin_logged', 'true');
+        sessionStorage.setItem('matribhumi_admin_role', matchedUser.role.toLowerCase());
+        sessionStorage.setItem('matribhumi_admin_name', matchedUser.name);
+        sessionStorage.setItem('matribhumi_admin_id', String(matchedUser.id));
+        sessionStorage.setItem('matribhumi_admin_email', matchedUser.email);
+        sessionStorage.setItem('matribhumi_admin_user', JSON.stringify(matchedUser));
+        
+        // Clear persistent login if any to avoid bypasses
+        localStorage.removeItem('matribhumi_admin_logged');
       }
       return { success: true, user: matchedUser };
     } else {
@@ -1860,11 +1863,13 @@ export function authenticateUser(loginId: string, passwordInput: string): { succ
       created_at: new Date().toISOString(),
     };
     if (typeof window !== 'undefined') {
-      localStorage.setItem('matribhumi_admin_logged', 'true');
-      localStorage.setItem('matribhumi_admin_role', 'admin');
-      localStorage.setItem('matribhumi_admin_name', adminUser.name);
-      localStorage.setItem('matribhumi_admin_id', String(adminUser.id));
-      localStorage.setItem('matribhumi_admin_user', JSON.stringify(adminUser));
+      sessionStorage.setItem('matribhumi_admin_logged', 'true');
+      sessionStorage.setItem('matribhumi_admin_role', 'admin');
+      sessionStorage.setItem('matribhumi_admin_name', adminUser.name);
+      sessionStorage.setItem('matribhumi_admin_id', String(adminUser.id));
+      sessionStorage.setItem('matribhumi_admin_user', JSON.stringify(adminUser));
+      
+      localStorage.removeItem('matribhumi_admin_logged');
     }
     return { success: true, user: adminUser as UserAccount };
   }
@@ -1884,11 +1889,13 @@ export function authenticateUser(loginId: string, passwordInput: string): { succ
       created_at: new Date().toISOString(),
     };
     if (typeof window !== 'undefined') {
-      localStorage.setItem('matribhumi_admin_logged', 'true');
-      localStorage.setItem('matribhumi_admin_role', 'editor');
-      localStorage.setItem('matribhumi_admin_name', editorUser.name);
-      localStorage.setItem('matribhumi_admin_id', String(editorUser.id));
-      localStorage.setItem('matribhumi_admin_user', JSON.stringify(editorUser));
+      sessionStorage.setItem('matribhumi_admin_logged', 'true');
+      sessionStorage.setItem('matribhumi_admin_role', 'editor');
+      sessionStorage.setItem('matribhumi_admin_name', editorUser.name);
+      sessionStorage.setItem('matribhumi_admin_id', String(editorUser.id));
+      sessionStorage.setItem('matribhumi_admin_user', JSON.stringify(editorUser));
+      
+      localStorage.removeItem('matribhumi_admin_logged');
     }
     return { success: true, user: editorUser as UserAccount };
   }

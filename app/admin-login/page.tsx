@@ -20,9 +20,12 @@ export default function AdminLoginPage() {
     setMounted(true);
     // If already logged in, redirect to /admin
     if (typeof window !== 'undefined') {
-      const isLogged = localStorage.getItem('matribhumi_admin_logged');
+      const isLogged = sessionStorage.getItem('matribhumi_admin_logged');
       if (isLogged === 'true') {
         window.location.href = '/admin';
+      } else {
+        // Clear any old lingering localstorage keys to guarantee login prompt
+        localStorage.removeItem('matribhumi_admin_logged');
       }
     }
   }, []);
